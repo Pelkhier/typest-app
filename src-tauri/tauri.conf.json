@@ -1,0 +1,60 @@
+{
+    "build": {
+        "beforeDevCommand": "pnpm dev",
+        "beforeBuildCommand": "pnpm build",
+        "devPath": "http://localhost:1420",
+        "distDir": "../dist"
+    },
+    "package": {
+        "productName": "typest-app",
+        "version": "0.0.0"
+    },
+    "tauri": {
+        "allowlist": {
+            "all": false,
+            "shell": {
+                "all": false,
+                "open": true
+            },
+            "path": {
+                "all": true
+            },
+            "fs": {
+                "all": true,
+                "scope": ["$APPDATA/", "$APPDATA/**"]
+            }
+        },
+        "bundle": {
+            "active": true,
+            "targets": "all",
+            "identifier": "com.typest.app.dev",
+            "icon": [
+                "icons/32x32.png",
+                "icons/128x128.png",
+                "icons/128x128@2x.png",
+                "icons/icon.icns",
+                "icons/icon.ico"
+            ],
+            "windows": {
+                "nsis": {
+                    "installMode": "currentUser"
+                },
+                "webviewInstallMode": {
+                    "type": "offlineInstaller"
+                }
+            }
+        },
+        "security": {
+            "csp": null
+        },
+        "windows": [
+            {
+                "fullscreen": false,
+                "resizable": true,
+                "title": "typest-app",
+                "width": 800,
+                "height": 600
+            }
+        ]
+    }
+}
