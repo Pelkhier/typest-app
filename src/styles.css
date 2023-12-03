@@ -81,3 +81,7 @@ button:hover {
     cursor: pointer;
         opacity: 1;
 }
+
+.my-container {
+    padding: 0 2rem
+}

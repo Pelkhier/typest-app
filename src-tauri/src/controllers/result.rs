@@ -17,7 +17,7 @@ pub struct User {
 }
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
-pub struct Level {
+pub struct LevelResult {
     id: i32,
     order_position: i32,
     name: String,
@@ -44,7 +44,7 @@ pub struct UserLevel {
 #[command]
 pub async fn get_result(
     state: State<'_, Pool<Sqlite>>,
-) -> Result<(Vec<User>, Vec<Level>, Vec<UserLevel>), String> {
+) -> Result<(Vec<User>, Vec<LevelResult>, Vec<UserLevel>), String> {
     let db = state.inner();
     let query = "INSERT INTO User (name, email, password) VALUES ('Admin', 'Admin@admin.com', 'password123');";
     let _ = sqlx::query(query).execute(db).await;
@@ -64,7 +64,7 @@ pub async fn get_result(
     ";
     let _ = sqlx::query(query).execute(db).await;
 
-    let result_levels = sqlx::query_as::<_, Level>("SELECT * FROM Level")
+    let result_levels = sqlx::query_as::<_, LevelResult>("SELECT * FROM Level")
         .fetch_all(db)
         .await
         .unwrap();

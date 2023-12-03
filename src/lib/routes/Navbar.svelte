@@ -1,10 +1,13 @@
 <script lang="ts">
+    // import { Link } from "svelte-routing";
     import LogoSecondary from "./navbar/LogoSecondary.svelte";
     import { langStore, type Lang } from "../stores/global";
     // import Icon from "@iconify/svelte";
     // import { fade } from "svelte/transition";
     import ToggleDarkMode from "./navbar/ToggleDarkMode.svelte";
     import LogoPrimary from "./navbar/LogoPrimary.svelte";
+    import active from "svelte-spa-router/active";
+    import { location } from "svelte-spa-router";
 
     // TODO : download fonts locally
     // export let data: LayoutData;
@@ -40,13 +43,16 @@
     <nav class="flex justify-between">
         <!-- class:left-bar={$page.url.pathname === "/en" ||
                 $page.url.pathname === "/ar"} -->
-        <div class="w-full transition-all duration-300 delay-300">
+        <div
+            class="w-full transition-all duration-300 delay-300 left-bar"
+            class:left-bar={$location === "/"}
+        >
             <div
                 class="left-bar-inner flex justify-between h-full items-center p-2 relative"
             >
                 <div class="flex gap-9">
                     <h1>
-                        <a href="/{lang}" class="flex items-center gap-2">
+                        <a href="/" class="flex items-center gap-2">
                             <LogoPrimary className="w-14 h-14" />
                             <LogoSecondary
                                 className="h-8 w-48 fill-darkblue dark:fill-gostwhite"
@@ -59,14 +65,30 @@
                                 <!-- data-active={$page.url.pathname.endsWith(
                                         lang
                                     )} -->
-                                <a href={`/${lang}/`}> Home </a>
+                                <a
+                                    href="/"
+                                    use:active={{
+                                        path: "/",
+                                        className: "text-tomato",
+                                    }}
+                                >
+                                    Home
+                                </a>
                             </li>
 
                             <li>
                                 <!-- data-active={$page.url.pathname.endsWith(
                                         "levels"
                                     )} -->
-                                <a href={`/${lang}/levels`}> Levels </a>
+                                <a
+                                    href="#/levels"
+                                    use:active={{
+                                        path: "/levels",
+                                        className: "text-tomato",
+                                    }}
+                                >
+                                    Levels
+                                </a>
                             </li>
                             <li>
                                 <!-- data-active={$page.url.pathname.endsWith(
@@ -85,7 +107,8 @@
         <!-- class:right-bar={$page.url.pathname === "/en" ||
                 $page.url.pathname === "/ar"} -->
         <div
-            class="flex justify-center items-center w-1/5 transition-all duration-300 delay-300"
+            class="flex justify-center items-center w-1/5 transition-all duration-300 delay-300 right-bar"
+            class:right-bar={$location === "/"}
         >
             <div class="bg-tomato rounded-md py-2 text-gostwhite">
                 {#if data.user?.id}
@@ -102,41 +125,42 @@
                         Signin
                     </a>
                 {/if}
-                <!-- {#if $page.url.pathname === "/en" || $page.url.pathname === "/ar"} -->
-                <form
-                    action="?/changeLang"
-                    method="post"
-                    class="inline"
-                    id="lang"
-                >
-                    <select
-                        class="bg-tomato m-0 rounded-md"
-                        bind:value={lang}
-                        on:change={changeLang}
-                        name="lang"
+                {#if $location === "/"}
+                    <form
+                        action="?/changeLang"
+                        method="post"
+                        class="inline"
                         id="lang"
                     >
-                        <option selected={lang === "en"} value="en">en</option>
-                        <option selected={lang === "ar"} value="ar">ar</option>
-                    </select>
-                    <button
-                        type="submit"
-                        class="opacity-0 w-0 h-0"
-                        bind:this={langButton}
-                    />
-                </form>
-                <!-- {/if} -->
+                        <select
+                            class="bg-tomato m-0 rounded-md"
+                            bind:value={lang}
+                            on:change={changeLang}
+                            name="lang"
+                            id="lang"
+                        >
+                            <option selected={lang === "en"} value="en"
+                                >en</option
+                            >
+                            <option selected={lang === "ar"} value="ar"
+                                >ar</option
+                            >
+                        </select>
+                        <button
+                            type="submit"
+                            class="opacity-0 w-0 h-0"
+                            bind:this={langButton}
+                        />
+                    </form>
+                {/if}
             </div>
         </div>
     </nav>
-    <main>
-        <h2 class="text-4xl">Slot</h2>
-    </main>
 </div>
 
 <style lang="postcss">
     :global(.layout) {
-        height: 100%;
+        height: 88px;
         min-width: 1024px;
         display: grid;
         grid-template-rows: auto 1fr;

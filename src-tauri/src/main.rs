@@ -5,6 +5,7 @@ mod controllers;
 mod db_config;
 mod models;
 
+use crate::controllers::level::get_all_levels;
 use crate::controllers::result::get_result;
 use crate::controllers::user::{create_user, get_users};
 use crate::db_config::init_db::initiate_db;
@@ -15,7 +16,12 @@ async fn main() {
 
     tauri::Builder::default()
         .manage(state)
-        .invoke_handler(tauri::generate_handler![create_user, get_users, get_result])
+        .invoke_handler(tauri::generate_handler![
+            create_user,
+            get_users,
+            get_result,
+            get_all_levels
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

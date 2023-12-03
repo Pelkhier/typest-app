@@ -36,9 +36,6 @@
                 "icons/icon.ico"
             ],
             "windows": {
-                "nsis": {
-                    "installMode": "currentUser"
-                },
                 "webviewInstallMode": {
                     "type": "offlineInstaller"
                 }
