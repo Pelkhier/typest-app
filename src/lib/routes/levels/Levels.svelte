@@ -1,43 +1,36 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
-    import type { Lang } from "../../stores/global";
+    import { langStore, type Lang } from "../../stores/global";
     import type { UserLevelCard } from "./types";
     import LevelCard from "./components/LevelCard.svelte";
+    import { onMount } from "svelte";
+    import { invoke } from "@tauri-apps/api/tauri";
 
     // export let data: PageServerData;
-    let userLevels: UserLevelCard[] = [];
-    let indeces = [1, 2, 3, 4, 5];
+    let userLevels: UserLevelCard[];
+    let lang: Lang = $langStore;
+    let currentLevel = 0;
 
-    for (let index of indeces) {
-        const userLevel: UserLevelCard = {
-            accuracy: 0.0,
-            time: 0.0,
-            wpm: 0.0,
-            completed: false,
-            level: {
-                id: index,
-                lang: "en",
-                name: "test",
-                order: index,
-                type: "learn",
-            },
-        };
-        userLevels.push(userLevel);
-    }
-    let lang: Lang = "en";
-    let currentLevel = userLevels.findIndex(
-        (level) => level.completed === false
-    );
+    onMount(async () => {
+        userLevels = await invoke("get_user_levels", { lang });
+
+        currentLevel = userLevels.findIndex(
+            (level) => level.completed === false
+        );
+    });
 </script>
 
-<div class="my-container mt-16" in:fade={{ delay: 300, duration: 300 }}>
-    <div id="levels" class="w-full grid grid-cols-6 gap-10 gap-y-16">
-        {#each userLevels as userLevel, index}
-            <LevelCard
-                {userLevel}
-                currentLevel={index === currentLevel}
-                {lang}
-            />
-        {/each}
+{#if userLevels}
+    <div class="my-container mt-16" in:fade={{ delay: 300, duration: 300 }}>
+        <!-- TODO : fix css when shrink, cards should not shrink with the screen -->
+        <div id="levels" class="w-full grid grid-cols-6 gap-10 gap-y-16">
+            {#each userLevels as userLevel, index}
+                <LevelCard
+                    {userLevel}
+                    currentLevel={index === currentLevel}
+                    {lang}
+                />
+            {/each}
+        </div>
     </div>
-</div>
+{/if}

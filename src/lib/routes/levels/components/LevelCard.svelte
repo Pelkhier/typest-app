@@ -2,6 +2,7 @@
     import { location } from "svelte-spa-router";
     import type { Lang } from "../../../stores/global";
     import type { GameType, GameTypeAr, UserLevelCard } from "../types";
+    import Icon from "@iconify/svelte";
 
     export let userLevel: UserLevelCard;
     export let currentLevel = false;
@@ -19,10 +20,10 @@
         | undefined = "hover";
 
     if (userLevel.level.type === "samurai-game") {
-        href = `${$location}/samurai-game?order=${userLevel.level.order}`;
+        href = `#${$location}/samurai-game/${userLevel.level.order}`;
         dataSveltekitPreloadData = "off";
     } else if (userLevel.level.type === "duck-hunt") {
-        href = `${$location}/duck-hunt?order=${userLevel.level.order}`;
+        href = `#${$location}/duck-hunt/${userLevel.level.order}`;
         dataSveltekitPreloadData = "off";
     }
     function handleClick(event: Event) {
@@ -72,7 +73,7 @@
             </div>
         {:else if userLevel.completed && !userLevel.accuracy}
             <div class="text-4xl">
-                <iconify-icon class="icon" icon="ic:baseline-gpp-good" />
+                <Icon class="icon" icon="ic:baseline-gpp-good" />
             </div>
         {/if}
     </div>
@@ -85,13 +86,13 @@
             <div
                 class="w-full h-full flex justify-center items-center text-7xl text-gostwhite"
             >
-                <iconify-icon icon="game-icons:samurai-helmet" />
+                <Icon icon="game-icons:samurai-helmet" />
             </div>
         {:else if userLevel.level.type === "duck-hunt"}
             <div
                 class="w-full h-full flex justify-center items-center text-6xl text-gostwhite"
             >
-                <iconify-icon icon="icon-park-solid:duck"></iconify-icon>
+                <Icon icon="icon-park-solid:duck" />
             </div>
         {:else}
             <div class="nail" data-dir={lang} />

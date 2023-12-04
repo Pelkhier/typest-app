@@ -2,25 +2,18 @@
     import { fade } from "svelte/transition";
     import Hero from "./sections/Hero.svelte";
     // import { Contributors, Details, TestSkills } from "$lib/components";
-    import type { Lang } from "../../stores/global";
+    import { langStore, type Lang } from "../../stores/global";
     import type { UserStats } from "./types";
+    import { onMount } from "svelte";
+    import { invoke } from "@tauri-apps/api/tauri";
 
-    // export let data: PageServerData;
-    const userStats: UserStats = {
-        completedLevelsCount: 2,
-        allLevelsCount: 4,
-        currentLevel: {
-            level: {
-                name: "test",
-                order: 1,
-                type: "learn",
-            },
-        },
-        lastStoryTime: {
-            accuracy: 90.24,
-            wpm: 53.42,
-        },
-    };
+    let userStats: UserStats = null;
+
+    onMount(async () => {
+        userStats = await invoke("get_user_stats", {
+            lang: $langStore,
+        });
+    });
 
     const lang: Lang = "en";
 </script>
@@ -33,65 +26,69 @@
     />
 </svelte:head>
 
-<div
-    class="my-container home mb-10"
-    in:fade={{ delay: 300, duration: 300 }}
-    out:fade={{ duration: 300 }}
->
-    <!-- Start Hero Section -->
-    <div class="hero flex items-center justify-center" data-dir={lang}>
-        <Hero {userStats} />
+{#if userStats}
+    <div
+        class="my-container home mb-10"
+        in:fade={{ delay: 300, duration: 300 }}
+        out:fade={{ duration: 300 }}
+    >
+        <!-- Start Hero Section -->
+        <div class="hero flex items-center justify-center" data-dir={lang}>
+            <Hero {userStats} />
 
-        <div class="key backspace flex justify-around items-center">
-            <iconify-icon icon="ph:arrow-up-bold" rotate="270deg" />
-            <div>backspace</div>
-        </div>
-        <div class="key enter flex justify-around items-center">
-            <div><iconify-icon icon="mi:enter" /></div>
-            <div>enter</div>
-        </div>
-        <div class="key shiftright flex justify-end items-center gap-2">
-            <iconify-icon icon="lucide:move-up" />
-            <div>shift</div>
-        </div>
-        <div class="key space">space</div>
-        <div class="key tab flex items-center justify-around">
-            <div>tab</div>
-            <div class="flex flex-col justify-around h-full">
-                <iconify-icon icon="octicon:tab-24" />
-                <iconify-icon icon="octicon:tab-24" flip="horizontal" />
+            <div class="key backspace flex justify-around items-center">
+                <iconify-icon icon="ph:arrow-up-bold" rotate="270deg" />
+                <div>backspace</div>
+            </div>
+            <div class="key enter flex justify-around items-center">
+                <div><iconify-icon icon="mi:enter" /></div>
+                <div>enter</div>
+            </div>
+            <div class="key shiftright flex justify-end items-center gap-2">
+                <iconify-icon icon="lucide:move-up" />
+                <div>shift</div>
+            </div>
+            <div class="key space">space</div>
+            <div class="key tab flex items-center justify-around">
+                <div>tab</div>
+                <div class="flex flex-col justify-around h-full">
+                    <iconify-icon icon="octicon:tab-24" />
+                    <iconify-icon icon="octicon:tab-24" flip="horizontal" />
+                </div>
+            </div>
+            <div class="key alt-right flex items-center justify-center">
+                alt
+            </div>
+            <div class="key control-left flex items-center justify-center">
+                ctrl
+            </div>
+            <div
+                class="key three flex items-center justify-center text-xl font-bold"
+            >
+                3
+            </div>
+            <div
+                class="key six flex items-center justify-center text-xl font-bold"
+            >
+                6
+            </div>
+            <div
+                class="key zero flex items-center justify-center text-xl font-bold"
+            >
+                0
             </div>
         </div>
-        <div class="key alt-right flex items-center justify-center">alt</div>
-        <div class="key control-left flex items-center justify-center">
-            ctrl
-        </div>
-        <div
-            class="key three flex items-center justify-center text-xl font-bold"
-        >
-            3
-        </div>
-        <div class="key six flex items-center justify-center text-xl font-bold">
-            6
-        </div>
-        <div
-            class="key zero flex items-center justify-center text-xl font-bold"
-        >
-            0
-        </div>
+        <!-- End Hero Section -->
+
+        <!-- Start Test Skills Section -->
+        <!-- <TestSkills {lang} /> -->
+        <!-- Start Test Skills Section -->
+        <!-- <Details /> -->
+        <!-- Start Contribute Section -->
+        <!-- <Contributors githubUsers={data.githubUsers} {lang} /> -->
+        <!-- End Contribute Section -->
     </div>
-    <!-- End Hero Section -->
-
-    <!-- Start Test Skills Section -->
-    <!-- <TestSkills {lang} /> -->
-    <!-- Start Test Skills Section -->
-    <!-- <Details /> -->
-    <!-- Start Contribute Section -->
-    <!-- <Contributors githubUsers={data.githubUsers} {lang} /> -->
-    <!-- End Contribute Section -->
-
-    <div class="w-full h-[700px]" />
-</div>
+{/if}
 
 <style lang="postcss">
     .home .hero {

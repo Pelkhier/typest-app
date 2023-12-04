@@ -26,6 +26,7 @@ export type GameData = {
         name: string;
         type: string;
         order: number;
+        expectedMiniGameScore: number | null;
     };
 };
 
@@ -59,6 +60,7 @@ export type KeyboardSettins = {
     textSize: TextSize;
     keyboardSound: boolean;
     keyboardShow: boolean;
+    miniGameSound: boolean;
 };
 
 type Attributes = {

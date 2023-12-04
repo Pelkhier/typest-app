@@ -1,11 +1,17 @@
 <script lang="ts">
-    import type { Lang } from "../../../stores/global";
+    import { langStore, type Lang } from "../../../stores/global";
     import type { UserStats } from "../types";
     import CyrcleChart from "./CyrcleChart.svelte";
     import LineChart from "./LineChart.svelte";
 
     export let userStats: UserStats;
-    const lang: Lang = "en";
+    let currentLevelRoute =
+        userStats?.currentLevel?.type === "learn" ||
+        userStats?.currentLevel?.type === "practice"
+            ? "game"
+            : userStats?.currentLevel?.type;
+
+    const lang: Lang = $langStore;
 </script>
 
 <div class="w-full h-full flex justify-center items-center gap-16">
@@ -17,7 +23,8 @@
             <!-- href="/{$page.data.lang}/levels/game?order={userStats
                     ?.currentLevel?.level.order ?? 1}" -->
             <a
-                href="/en"
+                href="#/levels/{currentLevelRoute}/{userStats?.currentLevel
+                    ?.order ?? 1}"
                 class="bg-tomatoSecondary text-gostwhite bg-opacity-90 h-full w-full flex justify-around items-center rounded-md transition-all hover:scale-105 hover:shadow-lg"
             >
                 <div class="flex flex-col items-center justify-center">
@@ -28,7 +35,7 @@
                     <h3 class="text-2xl font-bold">
                         <!-- {userStats?.currentLevel?.level.name ??
                             language[`${lang}`].heroStats.currentLevel.random} -->
-                        Random
+                        {userStats?.currentLevel?.name ?? "Random"}
                     </h3>
                 </div>
                 <h2>
@@ -57,7 +64,7 @@
             <div
                 class="w-full px-12 flex justify-around items-center text-xl font-extrabold"
             >
-                {#if userStats?.lastStoryTime?.accuracy}
+                {#if userStats?.lastStoryTime?.accuracy && userStats.lastStoryTime.completed}
                     <h4>
                         {userStats?.lastStoryTime?.accuracy?.toFixed(0)}<span
                             class="text-sm">%</span
@@ -72,12 +79,14 @@
                         </span>
                     </h4>
                 {:else}
-                    <button
+                    <a
+                        href="#/levels/game/{userStats?.lastStoryTime?.order ??
+                            1}"
                         class="border-2 border-darkblue py-2 px-4 rounded-md shadow-lg text-darkblue hover:bg-darkblue hover:text-gostwhite"
                     >
                         <!-- {language[`${lang}`].heroStats.lastStoryTime.play} -->
                         Play
-                    </button>
+                    </a>
                 {/if}
             </div>
         </div>
