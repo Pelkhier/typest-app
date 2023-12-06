@@ -40,12 +40,12 @@
     }
 
     #theme-toggle + label {
-        @apply inline-block cursor-pointer h-9 w-9 absolute top-2 rounded-full duration-300 content-[''];
+        @apply inline-block cursor-pointer h-9 w-9 absolute top-4 rounded-full duration-300 content-[''];
     }
-    :global(.layout[data-dir="en"] #theme-toggle + label) {
+    :global(body[data-lang="en"] #theme-toggle + label) {
         @apply right-6;
     }
-    :global(.layout[data-dir="ar"] #theme-toggle + label) {
+    :global(body[data-lang="ar"] #theme-toggle + label) {
         @apply left-6;
     }
 

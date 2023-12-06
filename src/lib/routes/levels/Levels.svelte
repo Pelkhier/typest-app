@@ -23,13 +23,9 @@
 {#if userLevels}
     <div class="my-container mt-16" in:fade={{ delay: 300, duration: 300 }}>
         <!-- TODO : fix css when shrink, cards should not shrink with the screen -->
-        <div id="levels" class="w-full grid grid-cols-6 gap-10 gap-y-16">
+        <div id="levels" class="w-full grid grid-cols-6 gap-10 gap-y-20">
             {#each userLevels as userLevel, index}
-                <LevelCard
-                    {userLevel}
-                    currentLevel={index === currentLevel}
-                    {lang}
-                />
+                <LevelCard {userLevel} currentLevel={index === currentLevel} />
             {/each}
         </div>
     </div>

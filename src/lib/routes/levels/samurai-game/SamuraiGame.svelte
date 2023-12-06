@@ -9,6 +9,7 @@
 
     let data: GameData;
     let nextGameType: GameType | null;
+    let reload = false;
 
     onMount(async () => {
         data = await invoke("get_level_info", {
@@ -20,8 +21,14 @@
             orderPosition: data.level.order + 1,
         });
     });
+
+    function toggleReload() {
+        reload = !reload;
+    }
 </script>
 
 {#if data}
-    <Game {data} {nextGameType} />
+    {#key reload}
+        <Game {data} {nextGameType} {toggleReload} />
+    {/key}
 {/if}

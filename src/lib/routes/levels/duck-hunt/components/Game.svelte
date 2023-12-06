@@ -10,31 +10,15 @@
     import type { Lang } from "../../game/types";
     import { pop, replace } from "svelte-spa-router";
     import Icon from "@iconify/svelte";
-    import { settingsStore } from "../../../../stores/global";
+    import homeSolid from "@iconify/icons-heroicons/home-solid";
+    import repeatIcon from "@iconify/icons-pajamas/repeat";
+    import next32Filled from "@iconify/icons-fluent/next-32-filled";
+    import duckIcon from "@iconify/icons-icon-park-twotone/duck";
+    import volumeOff from "@iconify/icons-mdi/volume-off";
+    import volumeHigh from "@iconify/icons-mdi/volume-high";
+    import { langStore, settingsStore } from "../../../../stores/global";
     import { invoke } from "@tauri-apps/api/tauri";
-    // import language from "$lib/language";
-
-    type TempData = {
-        game: {
-            user: {
-                miniGameSound: boolean;
-            };
-            userId: number;
-            levelId: number;
-            completed: boolean;
-            accuracy: number | null;
-            time: number | null;
-            level: {
-                lang: string;
-                order: number;
-                name: string;
-                type: string;
-                expectedMiniGameScore: number | null;
-                words: string;
-            };
-        };
-        nextLevelType: GameType | undefined;
-    };
+    import language from "../../../../language";
 
     type GameState = "in progress" | "game over";
     type Score = "perfect" | "good" | "ok" | "bad" | null;
@@ -42,11 +26,12 @@
     export let data: GameData;
 
     export let nextGameType: GameType | null;
+    export let toggleReload: () => void;
 
     let canvas: HTMLCanvasElement;
     let context: CanvasRenderingContext2D;
 
-    let lang: Lang = "en";
+    let lang: Lang = $langStore;
     let gameState: GameState = "in progress";
     let settings = {
         mute: !$settingsStore.miniGameSound,
@@ -260,15 +245,16 @@
     }
 
     function handleNextLevel() {
-        document.body.style.overflow = "auto";
-        document.body.style.overflowX = "hidden";
+        document.body.style.overflow = "";
+        document.body.style.overflowX = "";
         let mainLayout = document.getElementById(
             "main-layout"
         ) as HTMLDivElement;
-        mainLayout.style.padding = "1rem 2rem";
-        mainLayout.style.height = "auto";
+        // mainLayout.style.padding = "1rem 2rem";
+        mainLayout.style.padding = "";
+        mainLayout.style.height = "";
         let nav = mainLayout.firstElementChild as HTMLDivElement;
-        nav.style.display = "flex";
+        nav.style.display = "";
 
         switch (nextGameType) {
             case "samurai-game":
@@ -290,17 +276,16 @@
 
     function handleHomeClick() {
         // TODO : this needed to bed handled more robust way, I am forcing the change here because in this page the layout is disabled, and when returning back the layout will stay disabled, so this need fixing
-        document.body.style.overflow = "auto";
-        document.body.style.overflowX = "hidden";
+        document.body.style.overflow = "";
+        document.body.style.overflowX = "";
         let mainLayout = document.getElementById(
             "main-layout"
         ) as HTMLDivElement;
-        mainLayout.style.padding = "1rem 2rem";
-        mainLayout.style.height = "auto";
+        mainLayout.style.padding = "";
+        mainLayout.style.height = "";
         let nav = mainLayout.firstElementChild as HTMLDivElement;
-        nav.style.display = "flex";
+        nav.style.display = "";
 
-        // goto(`/${$page.data.lang}/levels/`);
         pop();
     }
 
@@ -378,7 +363,7 @@
                 class="text-2xl test-gostwhite"
                 class:text-tomato={idx + 1 <= deadDucks}
             >
-                <Icon icon="icon-park-twotone:duck" />
+                <Icon icon={duckIcon} />
             </li>
         {/each}
     </ul>
@@ -401,9 +386,9 @@
             on:click={toggleSounds}
         >
             {#if settings.mute}
-                <Icon icon="mdi:volume-off" />
+                <Icon icon={volumeOff} />
             {:else}
-                <Icon icon="mdi:volume-high" />
+                <Icon icon={volumeHigh} />
             {/if}
         </button>
         <!-- End Sound effect controller button -->
@@ -434,10 +419,7 @@
                         class="bg-gostwhite text-8xl rounded-b-lg"
                         on:click={handleHomeClick}
                     >
-                        <Icon
-                            class="text-darkblue"
-                            icon="heroicons:home-solid"
-                        />
+                        <Icon class="text-darkblue" icon={homeSolid} />
                     </button>
                 </div>
 
@@ -445,15 +427,13 @@
                     <div class="per-minite">
                         {$wordPerMinite.toFixed(2)}
                         <span class="unit">
-                            <!-- {language[`${lang}`].result.wpm} -->
-                            wpm
+                            {language[`${lang}`].result.wpm}
                         </span>
                     </div>
                     <div class="seconds">
                         {$totalTime.toFixed(2)}
                         <span class="unit">
-                            <!-- {language[`${lang}`].result.seconds} -->
-                            seconds
+                            {language[`${lang}`].result.seconds}
                         </span>
                     </div>
                     <div class="accuracy">
@@ -468,22 +448,21 @@
                 >
                     <!-- on:click={() => goto($page.url.href)} -->
                     <button
+                        on:click={toggleReload}
                         class="repeat w-full flex items-center {lang === 'en'
                             ? 'justify-end'
                             : 'justify-start'} gap-1 pr-12"
                     >
-                        <!-- {language[`${lang}`].result.repeat} -->
-                        Repeat
-                        <Icon icon="pajamas:repeat" />
+                        {language[`${lang}`].result.repeat}
+                        <Icon icon={repeatIcon} />
                     </button>
                     <button
                         class="next w-full flex items-center gap-1 pl-12"
                         class:justify-end={lang === "ar"}
                         on:click={handleNextLevel}
                     >
-                        <!-- {language[`${lang}`].result.next} -->
-                        Next
-                        <Icon icon="fluent:next-32-filled" />
+                        {language[`${lang}`].result.next}
+                        <Icon icon={next32Filled} />
                     </button>
                 </div>
             </div>

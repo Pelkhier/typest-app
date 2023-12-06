@@ -1,11 +1,12 @@
 <script lang="ts">
+    import language from "../../../language";
     import { langStore, type Lang } from "../../../stores/global";
     import type { UserStats } from "../types";
     import CyrcleChart from "./CyrcleChart.svelte";
     import LineChart from "./LineChart.svelte";
 
     export let userStats: UserStats;
-    let currentLevelRoute =
+    const currentLevelRoute =
         userStats?.currentLevel?.type === "learn" ||
         userStats?.currentLevel?.type === "practice"
             ? "game"
@@ -20,8 +21,6 @@
         <div
             class="h-1/5 border-tomatoSecondary border-2 rounded-lg shadow-inner shadow-tomato p-2 z-50"
         >
-            <!-- href="/{$page.data.lang}/levels/game?order={userStats
-                    ?.currentLevel?.level.order ?? 1}" -->
             <a
                 href="#/levels/{currentLevelRoute}/{userStats?.currentLevel
                     ?.order ?? 1}"
@@ -29,18 +28,15 @@
             >
                 <div class="flex flex-col items-center justify-center">
                     <h2 class="text-xl">
-                        <!-- {language[`${lang}`].heroStats.currentLevel.title} -->
-                        Current Level
+                        {language[lang].heroStats.currentLevel.title}
                     </h2>
                     <h3 class="text-2xl font-bold">
-                        <!-- {userStats?.currentLevel?.level.name ??
-                            language[`${lang}`].heroStats.currentLevel.random} -->
-                        {userStats?.currentLevel?.name ?? "Random"}
+                        {userStats?.currentLevel?.name ??
+                            language[lang].heroStats.currentLevel.random}
                     </h3>
                 </div>
                 <h2>
-                    <!-- {language[`${lang}`].heroStats.currentLevel.continue} -->
-                    Click To Continue
+                    {language[lang].heroStats.currentLevel.continue}
                     {#if lang === "en"}
                         &rightarrow;
                     {:else}
@@ -58,8 +54,7 @@
             <h2
                 class="text-2xl font-bold bg-darkblue text-gostwhite text-center w-[110%] p-2 shadow-lg rounded-md"
             >
-                <!-- {language[`${lang}`].heroStats.lastStoryTime.title} -->
-                Last Story Time
+                {language[lang].heroStats.lastStoryTime.title}
             </h2>
             <div
                 class="w-full px-12 flex justify-around items-center text-xl font-extrabold"
@@ -74,8 +69,7 @@
                     <h4>
                         {userStats?.lastStoryTime?.wpm?.toFixed(0)}
                         <span class="text-sm">
-                            <!-- {language[`${lang}`].heroStats.lastStoryTime.wpm} -->
-                            wpm
+                            {language[lang].heroStats.lastStoryTime.wpm}
                         </span>
                     </h4>
                 {:else}
@@ -84,8 +78,7 @@
                             1}"
                         class="border-2 border-darkblue py-2 px-4 rounded-md shadow-lg text-darkblue hover:bg-darkblue hover:text-gostwhite"
                     >
-                        <!-- {language[`${lang}`].heroStats.lastStoryTime.play} -->
-                        Play
+                        {language[lang].heroStats.lastStoryTime.play}
                     </a>
                 {/if}
             </div>

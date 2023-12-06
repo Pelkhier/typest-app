@@ -1,29 +1,24 @@
 <script lang="ts">
-    // import { Link } from "svelte-routing";
     import LogoSecondary from "./navbar/LogoSecondary.svelte";
     import { langStore, type Lang, settingsStore } from "../stores/global";
-    // import Icon from "@iconify/svelte";
-    // import { fade } from "svelte/transition";
     import ToggleDarkMode from "./navbar/ToggleDarkMode.svelte";
     import LogoPrimary from "./navbar/LogoPrimary.svelte";
     import active from "svelte-spa-router/active";
     import { location } from "svelte-spa-router";
     import { onMount } from "svelte";
     import { invoke } from "@tauri-apps/api/tauri";
-
-    // TODO : download fonts locally
-    // export let data: LayoutData;
-
-    let data = {
-        user: {
-            id: 1,
-            email: "test@test.com",
-        },
-    };
+    import language from "../language";
+    import { fade } from "svelte/transition";
 
     let lang: Lang = $langStore;
-    let langButton: HTMLButtonElement;
     let loading = true;
+
+    document.body.dataset.lang = lang;
+    if (lang === "ar") {
+        document.body.dir = "rtl";
+    } else {
+        document.body.dir = "ltr";
+    }
 
     onMount(async () => {
         $settingsStore = await invoke("get_user_settings");
@@ -37,123 +32,91 @@
     });
 
     async function changeLang() {
-        langButton.click();
-
         $langStore = lang;
         localStorage.setItem("lang", lang);
         loading = true;
-        if (lang === "ar") {
-            document.body.dir = "rtl";
-        } else {
-            document.body.dir = "ltr";
-        }
     }
-
-    // $: data, (loading = false);
 </script>
 
 {#if !loading}
-    <div id="main-layout" class="layout select-none" data-dir={lang}>
+    <div id="main-layout" class="my-container layout select-none">
         <nav class="flex justify-between">
-            <!-- class:left-bar={$page.url.pathname === "/en" ||
-                $page.url.pathname === "/ar"} -->
-            <div
-                class="w-full transition-all duration-300 delay-300 left-bar"
-                class:left-bar={$location === "/"}
-            >
+            <div class="w-full" class:left-bar={$location === "/"}>
                 <div
                     class="left-bar-inner flex justify-between h-full items-center p-2 relative"
                 >
                     <div class="flex gap-9">
                         <h1>
-                            <a href="/" class="flex items-center gap-2">
+                            <a href="#/" class="flex items-center gap-2">
                                 <LogoPrimary className="w-14 h-14" />
                                 <LogoSecondary
                                     className="h-8 w-48 fill-darkblue dark:fill-gostwhite"
                                 />
                             </a>
                         </h1>
-                        {#if data.user}
-                            <ul>
-                                <li>
-                                    <!-- data-active={$page.url.pathname.endsWith(
-                                        lang
-                                    )} -->
-                                    <a
-                                        href="/"
-                                        use:active={{
-                                            path: "/",
-                                            className: "text-tomato",
-                                        }}
-                                    >
-                                        Home
-                                    </a>
-                                </li>
+                        <ul>
+                            <li>
+                                <a
+                                    href="#/"
+                                    use:active={{
+                                        path: "/",
+                                        className: "text-tomato",
+                                    }}
+                                >
+                                    {language[lang].nav.home}
+                                </a>
+                            </li>
 
-                                <li>
-                                    <!-- data-active={$page.url.pathname.endsWith(
+                            <li>
+                                <!-- data-active={$page.url.pathname.endsWith(
                                         "levels"
                                     )} -->
-                                    <a
-                                        href="#/levels"
-                                        use:active={{
-                                            path: "/levels",
-                                            className: "text-tomato",
-                                        }}
-                                    >
-                                        Levels
-                                    </a>
-                                </li>
-                                <li>
-                                    <!-- data-active={$page.url.pathname.endsWith(
+                                <a
+                                    href="#/levels"
+                                    use:active={{
+                                        path: "/levels",
+                                        className: "text-tomato",
+                                    }}
+                                >
+                                    {language[lang].nav.levels}
+                                </a>
+                            </li>
+                            <!-- <li> -->
+                            <!-- data-active={$page.url.pathname.endsWith(
                                             "add-level"
                                         )} -->
-                                    <a href={`/${lang}/add-level`}>
+                            <!-- <a href={`/${lang}/add-level`}>
                                         Add-level
-                                    </a>
-                                </li>
-                            </ul>
-                        {/if}
+                                    </a> -->
+                            <!-- </li> -->
+                        </ul>
                     </div>
                     <div>
                         <ToggleDarkMode />
                     </div>
                 </div>
             </div>
-            <!-- class:right-bar={$page.url.pathname === "/en" ||
-                $page.url.pathname === "/ar"} -->
             <div
-                class="flex justify-center items-center w-1/5 transition-all duration-300 delay-300 right-bar"
+                class="flex justify-center items-center transition-all duration-300"
                 class:right-bar={$location === "/"}
+                class:w-1={$location !== "/"}
             >
                 <div class="bg-tomato rounded-md py-2 text-gostwhite">
                     {#if $location === "/"}
-                        <form
-                            action="?/changeLang"
-                            method="post"
-                            class="inline"
+                        <select
+                            class="bg-tomato m-0 rounded-md"
+                            bind:value={lang}
+                            on:change={changeLang}
+                            name="lang"
                             id="lang"
                         >
-                            <select
-                                class="bg-tomato m-0 rounded-md"
-                                bind:value={lang}
-                                on:change={changeLang}
-                                name="lang"
-                                id="lang"
-                            >
-                                <option selected={lang === "en"} value="en"
-                                    >English</option
-                                >
-                                <option selected={lang === "ar"} value="ar"
-                                    >Arabic</option
-                                >
-                            </select>
-                            <button
-                                type="submit"
-                                class="opacity-0 w-0 h-0"
-                                bind:this={langButton}
-                            />
-                        </form>
+                            <option selected={lang === "en"} value="en">
+                                {language[lang].nav.langs.en}
+                            </option>
+                            <option selected={lang === "ar"} value="ar">
+                                {language[lang].nav.langs.ar}
+                            </option>
+                        </select>
                     {/if}
                 </div>
             </div>
@@ -163,18 +126,19 @@
 
 <style lang="postcss">
     :global(.layout) {
-        height: 88px;
+        /* height: 88px; */
         min-width: 1024px;
         display: grid;
         grid-template-rows: auto 1fr;
-        padding: 1rem 2rem;
+        /* padding: 1rem 2rem; */
+        @apply pt-3;
     }
 
-    :global(.layout[data-dir="ar"]) {
+    :global(body[data-lang="ar"]) {
         direction: rtl;
         font-family: "Noto Kufi Arabic", sans-serif;
     }
-    :global(.layout[data-dir="en"]) {
+    :global(body[data-lang="en"]) {
         direction: ltr;
     }
 
@@ -201,13 +165,7 @@
     .layout nav .right-bar {
         width: 20%;
         border-radius: 1.5rem 1.5rem 0 0;
-        @apply bg-darkblue dark:bg-gostwhite;
-    }
-    .layout[data-dir="en"] nav .right-bar div .signin {
-        @apply border-r-4 border-r-darkblue dark:border-r-gostwhite;
-    }
-    .layout[data-dir="ar"] nav .right-bar div .signin {
-        @apply border-l-4 border-l-darkblue dark:border-l-gostwhite;
+        @apply bg-darkblue dark:bg-gostwhite w-1/5;
     }
 
     .left-bar {
@@ -217,11 +175,11 @@
     .left-bar-inner {
         @apply bg-gostwhite text-darkblue dark:bg-darkblue dark:text-gostwhite;
     }
-    .layout[data-dir="en"] nav .left-bar-inner {
+    :global(body[data-lang="en"]) nav .left-bar-inner {
         border-radius: 0 0 1.5rem 0;
         padding-left: 1rem;
     }
-    .layout[data-dir="ar"] nav .left-bar-inner {
+    :global(body[data-lang="ar"]) nav .left-bar-inner {
         border-radius: 0 0 0 1.5rem;
         padding-right: 1rem;
     }

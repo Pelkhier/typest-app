@@ -6,10 +6,14 @@
     import type { Lang } from "../../game/types";
     import type { GameData, GameType } from "../../types";
     import Icon from "@iconify/svelte";
+    import homeSolid from "@iconify/icons-heroicons/home-solid";
+    import repeatIcon from "@iconify/icons-pajamas/repeat";
+    import next32Filled from "@iconify/icons-fluent/next-32-filled";
+
     import { pop, replace } from "svelte-spa-router";
     import { invoke } from "@tauri-apps/api/tauri";
     import { langStore } from "../../../../stores/global";
-    // import language from "$lib/language";
+    import language from "../../../../language";
 
     // TODO : add more utilities like player hitting substruct more health from enemy when all letters correct or when score prefect ...etc
     // TODO : there are some utils that unnecessary for the game to work such as controls (arrows), you can use them to add new functionality to the game or just delete them
@@ -18,6 +22,7 @@
 
     export let data: GameData;
     export let nextGameType: GameType | null;
+    export let toggleReload: () => void;
 
     type GameState = "in progress" | "game over";
     type GameResult = "You won" | "You lost" | "Draw";
@@ -428,30 +433,30 @@
 
     function handleHomeClick() {
         // TODO : this needed to bed handled more robust way, I am forcing the change here because in this page the layout is disabled, and when returning back the layout will stay disabled, so this need fixing
-        document.body.style.overflow = "auto";
-        document.body.style.overflowX = "hidden";
+        document.body.style.overflow = "";
+        document.body.style.overflowX = "";
         let mainLayout = document.getElementById(
             "main-layout"
         ) as HTMLDivElement;
-        mainLayout.style.padding = "1rem 2rem";
-        mainLayout.style.height = "auto";
+        mainLayout.style.padding = "";
+        mainLayout.style.height = "";
         let nav = mainLayout.firstElementChild as HTMLDivElement;
-        nav.style.display = "flex";
+        nav.style.display = "";
 
         // goto(`/${$page.data.lang}/levels/`);
         pop();
     }
 
     function handleNextLevel() {
-        document.body.style.overflow = "auto";
-        document.body.style.overflowX = "hidden";
+        document.body.style.overflow = "";
+        document.body.style.overflowX = "";
         let mainLayout = document.getElementById(
             "main-layout"
         ) as HTMLDivElement;
-        mainLayout.style.padding = "1rem 2rem";
-        mainLayout.style.height = "auto";
+        mainLayout.style.padding = "";
+        mainLayout.style.height = "";
         let nav = mainLayout.firstElementChild as HTMLDivElement;
-        nav.style.display = "flex";
+        nav.style.display = "";
 
         switch (nextGameType) {
             case "samurai-game":
@@ -501,7 +506,7 @@
                         class="bg-tomato text-gostwhite text-8xl rounded-b-lg"
                         on:click={handleHomeClick}
                     >
-                        <Icon icon="heroicons:home-solid" />
+                        <Icon icon={homeSolid} />
                     </button>
                 </div>
                 {#if gameResult !== "You won"}
@@ -517,15 +522,13 @@
                         <div class="per-minite">
                             {$wordPerMinite.toFixed(2)}
                             <span class="unit">
-                                <!-- {language[`${lang}`].result.wpm} -->
-                                wpm
+                                {language[`${lang}`].result.wpm}
                             </span>
                         </div>
                         <div class="seconds">
                             {$totalTime.toFixed(2)}
                             <span class="unit">
-                                <!-- {language[`${lang}`].result.seconds} -->
-                                seconds
+                                {language[`${lang}`].result.seconds}
                             </span>
                         </div>
                         <div class="accuracy">
@@ -540,14 +543,14 @@
                 >
                     <!-- on:click={() => goto($page.url.href)} -->
                     <button
+                        on:click={toggleReload}
                         class="repeat w-full flex items-center {lang === 'en'
                             ? 'justify-end'
                             : 'justify-start'} gap-1 pr-12"
                         class:lost-repeat={gameResult !== "You won"}
                     >
-                        <!-- {language[`${lang}`].result.repeat} -->
-                        Repeat
-                        <Icon icon="pajamas:repeat" />
+                        {language[`${lang}`].result.repeat}
+                        <Icon icon={repeatIcon} />
                     </button>
                     {#if gameResult === "You won"}
                         <button
@@ -555,9 +558,8 @@
                             class:justify-end={lang === "ar"}
                             on:click={handleNextLevel}
                         >
-                            <!-- {language[`${lang}`].result.next} -->
-                            Next
-                            <Icon icon="fluent:next-32-filled" />
+                            {language[`${lang}`].result.next}
+                            <Icon icon={next32Filled} />
                         </button>
                     {/if}
                 </div>
@@ -570,7 +572,7 @@
             class="absolute top-16 right-12 z-50 bg-gostwhite text-darkblue text-3xl p-2 rounded-full opacity-70 hover:opacity-100 shadow-xl"
             on:click={handleHomeClick}
         >
-            <Icon icon="heroicons:home-solid" />
+            <Icon icon={homeSolid} />
         </button>
     {/if}
 

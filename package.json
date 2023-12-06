@@ -16,6 +16,17 @@
     "svelte-spa-router": "^3.3.0"
   },
   "devDependencies": {
+    "@iconify/icons-entypo": "^1.2.4",
+    "@iconify/icons-fluent": "^1.2.38",
+    "@iconify/icons-gala": "^1.2.7",
+    "@iconify/icons-game-icons": "^1.2.1",
+    "@iconify/icons-heroicons": "^1.2.9",
+    "@iconify/icons-ic": "^1.2.13",
+    "@iconify/icons-icon-park-solid": "^1.2.8",
+    "@iconify/icons-icon-park-twotone": "^1.2.8",
+    "@iconify/icons-material-symbols": "^1.2.58",
+    "@iconify/icons-mdi": "^1.2.48",
+    "@iconify/icons-pajamas": "^1.2.32",
     "@iconify/svelte": "^3.1.4",
     "@sveltejs/vite-plugin-svelte": "^2.4.2",
     "@tauri-apps/cli": "^1.5.6",

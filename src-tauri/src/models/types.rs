@@ -1,3 +1,6 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug)]
 pub enum Lang {
     En,
     Ar,
@@ -24,6 +27,7 @@ impl From<String> for Lang {
     }
 }
 
+#[derive(Serialize, Deserialize, Debug)]
 pub enum Type {
     Learn,
     Practice,

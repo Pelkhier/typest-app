@@ -8,7 +8,13 @@
     } from "../../../../stores/global";
     import Spinner from "../../../../components/Spinner.svelte";
     import Icon from "@iconify/svelte";
+    import text12Filled from "@iconify/icons-fluent/text-12-filled";
+    import soundIcon from "@iconify/icons-entypo/sound";
+    import soundMute from "@iconify/icons-entypo/sound-mute";
+    import keyboardIcon from "@iconify/icons-material-symbols/keyboard";
+    import keyboardOff from "@iconify/icons-material-symbols/keyboard-off";
     import { invoke } from "@tauri-apps/api/tauri";
+    import language from "../../../../language";
 
     export let startAgain: () => void;
 
@@ -17,19 +23,8 @@
     let keyboardSound = $settingsStore.keyboardSound;
     let keyboardShow = $settingsStore.keyboardShow;
 
-    // TODO: consider using localStorage to store settings instead of the database to increase speed
     async function setSettings(settings: any) {
         $settingsLoader = true;
-        // const body = JSON.stringify({
-        //     userId: $page.data.user.id,
-        //     settings,
-        // });
-        // await fetch("/api/game/settings", {
-        //     method: "POST",
-        //     body,
-        // });
-        // // TODO : consider using invalidate(url)
-        // await invalidateAll();
         await invoke("update_user_settings", {
             ...settings,
         });
@@ -73,8 +68,10 @@
                 class:size-selected={textSize === "small"}
                 class="flex flex-col justify-center items-center px-2 rounded-lg"
             >
-                <Icon class="text-3xl" icon="fluent:text-12-filled" />
-                <small>small</small>
+                <Icon class="text-3xl" icon={text12Filled} />
+                <small>
+                    {language[lang].keyboardSettings.smallText}
+                </small>
             </button>
         </div>
         <div class=" w-full flex justify-center">
@@ -83,8 +80,10 @@
                 class:size-selected={textSize === "medium"}
                 class="flex flex-col justify-center items-center px-2 rounded-lg"
             >
-                <Icon class="text-6xl" icon="fluent:text-12-filled" />
-                <small>medium</small>
+                <Icon class="text-6xl" icon={text12Filled} />
+                <small>
+                    {language[lang].keyboardSettings.mediumText}
+                </small>
             </button>
         </div>
         <div class="w-full flex justify-center">
@@ -93,8 +92,10 @@
                 class:size-selected={textSize === "large"}
                 class="flex flex-col justify-center items-center px-2 rounded-lg"
             >
-                <Icon class="text-9xl" icon="fluent:text-12-filled" />
-                <small>large</small>
+                <Icon class="text-9xl" icon={text12Filled} />
+                <small>
+                    {language[lang].keyboardSettings.largeText}
+                </small>
             </button>
         </div>
     </div>
@@ -107,12 +108,14 @@
                 class="flex justify-center p-2 rounded-md"
             >
                 {#if keyboardSound}
-                    <Icon class="text-4xl" icon="entypo:sound" />
+                    <Icon class="text-4xl" icon={soundIcon} />
                 {:else}
-                    <Icon class="text-4xl" icon="entypo:sound-mute" />
+                    <Icon class="text-4xl" icon={soundMute} />
                 {/if}
             </button>
-            <small>keyboard sound</small>
+            <small>
+                {language[lang].keyboardSettings.keyboardSound}
+            </small>
         </div>
         <div
             class="keyboard-settings flex flex-col items-center justify-center gap-2"
@@ -123,15 +126,14 @@
                 class="flex justify-center p-2 rounded-md"
             >
                 {#if keyboardShow}
-                    <Icon class="text-4xl" icon="material-symbols:keyboard" />
+                    <Icon class="text-4xl" icon={keyboardIcon} />
                 {:else}
-                    <Icon
-                        class="text-4xl"
-                        icon="material-symbols:keyboard-off"
-                    />
+                    <Icon class="text-4xl" icon={keyboardOff} />
                 {/if}
             </button>
-            <small>keyboard</small>
+            <small>
+                {language[lang].keyboardSettings.KeyboardShow}
+            </small>
         </div>
     </div>
 </div>

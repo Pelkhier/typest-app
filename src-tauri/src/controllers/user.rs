@@ -26,7 +26,7 @@ pub async fn get_user_stats(state: State<'_, Pool<Sqlite>>, lang: String) -> Res
         .iter()
         .find(|v| v.completed == 0)
         .and_then(|v| Some(v.level_id))
-        .unwrap_or(1);
+        .unwrap_or(completed_result[0].level_id);
 
     #[derive(sqlx::FromRow, Debug)]
     struct TempCurrLevel {
@@ -56,11 +56,14 @@ pub async fn get_user_stats(state: State<'_, Pool<Sqlite>>, lang: String) -> Res
     let query = "
         SELECT ul.accuracy, ul.wpm, ul.completed, l.order_position FROM UserLevel ul 
         JOIN Level l ON  l.id = ul.level_id
-        WHERE l.type = 'story-time'
+        WHERE l.type = 'story-time' AND l.lang = $1
         ORDER BY ul.created_at DESC
         LIMIT 1;
     ";
-    let last_story_time_res = sqlx::query_as::<_, TepStoryTime>(query).fetch_one(db).await;
+    let last_story_time_res = sqlx::query_as::<_, TepStoryTime>(query)
+        .bind(lang)
+        .fetch_one(db)
+        .await;
     let mut last_story_time: Option<Value> = None;
     match last_story_time_res {
         Ok(res) => {
@@ -71,7 +74,8 @@ pub async fn get_user_stats(state: State<'_, Pool<Sqlite>>, lang: String) -> Res
                 "order": res.order_position
             }))
         }
-        Err(_) => {
+        Err(e) => {
+            println!("{:?}", e);
             last_story_time = None;
         }
     }

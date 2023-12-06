@@ -1,6 +1,10 @@
 <script lang="ts">
     // TODO : this file needs some organizing and refactoring to make clear and easy to folow
     import Icon from "@iconify/svelte";
+    import repeatIcon from "@iconify/icons-pajamas/repeat";
+    import settingsIcon from "@iconify/icons-gala/settings";
+    import baselineGppGood from "@iconify/icons-ic/baseline-gpp-good";
+    import next32Filled from "@iconify/icons-fluent/next-32-filled";
     import { fade } from "svelte/transition";
     import { tweened } from "svelte/motion";
     import Keyboard from "./Keyboard.svelte";
@@ -25,6 +29,7 @@
     import GameSettings from "./GameSettings.svelte";
     import { replace } from "svelte-spa-router";
     import { invoke } from "@tauri-apps/api/tauri";
+    import language from "../../../../language";
 
     export let data: GameData;
 
@@ -390,14 +395,14 @@
                 on:click={startAgain}
                 class="again flex items-center justify-center h-12 w-12"
             >
-                <Icon class="my-2" icon="pajamas:repeat" />
+                <Icon class="my-2" icon={repeatIcon} />
             </button>
             <button
                 on:click={toggleSettings}
                 class:text-tomato={settingsMenu}
                 class="settings flex items-center justify-center h-12 w-12"
             >
-                <Icon class="my-2" icon="gala:settings" />
+                <Icon class="my-2" icon={settingsIcon} />
             </button>
         </div>
 
@@ -465,11 +470,10 @@
             <div class="result flex flex-col justify-between">
                 <div in:fade class="flex justify-around items-center">
                     <h2 class="done-text">
-                        <!-- {language[`${lang}`].result.wellDone} -->
-                        Well Done
+                        {language[`${lang}`].result.wellDone}
                     </h2>
                     <div class="done-icon">
-                        <Icon class="icon" icon="ic:baseline-gpp-good" />
+                        <Icon class="icon" icon={baselineGppGood} />
                     </div>
                 </div>
                 <div
@@ -482,18 +486,16 @@
                             ? 'justify-end'
                             : 'justify-start'} gap-1 pr-12"
                     >
-                        <!-- {language[`${lang}`].result.repeat} -->
-                        Repeat
-                        <Icon icon="pajamas:repeat" />
+                        {language[`${lang}`].result.repeat}
+                        <Icon icon={repeatIcon} />
                     </button>
                     <button
                         on:click={nextLevel}
                         class="next w-full flex items-center gap-1 pl-12"
                         class:justify-end={lang === "ar"}
                     >
-                        <!-- {language[`${lang}`].result.next} -->
-                        Next
-                        <Icon icon="fluent:next-32-filled" />
+                        {language[`${lang}`].result.next}
+                        <Icon icon={next32Filled} />
                     </button>
                 </div>
             </div>
@@ -503,15 +505,13 @@
                     <div class="per-minite">
                         {$wordPerMinite.toFixed(2)}
                         <span class="unit">
-                            <!-- {language[`${lang}`].result.wpm} -->
-                            wpm
+                            {language[`${lang}`].result.wpm}
                         </span>
                     </div>
                     <div class="seconds">
                         {$totalTime.toFixed(2)}
                         <span class="unit">
-                            <!-- {language[`${lang}`].result.seconds} -->
-                            seconds
+                            {language[`${lang}`].result.seconds}
                         </span>
                     </div>
                     <div class="accuracy">
@@ -528,18 +528,16 @@
                             ? 'justify-end'
                             : 'justify-start'} gap-1 pr-12"
                     >
-                        <!-- {language[`${lang}`].result.repeat} -->
-                        Repeat
-                        <Icon icon="pajamas:repeat" />
+                        {language[`${lang}`].result.repeat}
+                        <Icon icon={repeatIcon} />
                     </button>
                     <button
                         on:click={nextLevel}
                         class="next w-full flex items-center gap-1 pl-12"
                         class:justify-end={lang === "ar"}
                     >
-                        <!-- {language[`${lang}`].result.next} -->
-                        Next
-                        <Icon icon="fluent:next-32-filled" />
+                        {language[`${lang}`].result.next}
+                        <Icon icon={next32Filled} />
                     </button>
                 </div>
             </div>

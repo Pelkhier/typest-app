@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { ChoosenLang, Lang, TextContent } from "./../types";
     import { ar, en } from "./../lettersLang";
+    import { langStore } from "../../../../stores/global";
 
     export let firstHandsLoad: () => void;
 
@@ -9,7 +10,7 @@
     let textKey2: TextContent;
     let objEl: HTMLObjectElement;
 
-    let language: Lang = "en";
+    let language: Lang = $langStore;
 
     // @ts-ignore
     if (language === "ar") {

@@ -1,12 +1,15 @@
 <script lang="ts">
     import { location } from "svelte-spa-router";
-    import type { Lang } from "../../../stores/global";
+    import { langStore, type Lang } from "../../../stores/global";
     import type { GameType, GameTypeAr, UserLevelCard } from "../types";
     import Icon from "@iconify/svelte";
+    import baselineGppGood from "@iconify/icons-ic/baseline-gpp-good";
+    import samuraiHelmet from "@iconify/icons-game-icons/samurai-helmet";
+    import duckIcon from "@iconify/icons-icon-park-solid/duck";
 
     export let userLevel: UserLevelCard;
     export let currentLevel = false;
-    export let lang: Lang;
+    const lang: Lang = $langStore;
     let gameType: GameType | GameTypeAr = userLevel.level.type as GameType;
 
     let href = `#${$location}/game/${userLevel.level.order}`;
@@ -47,6 +50,9 @@
             case "samurai-game":
                 gameType = "لعبة الساموراي";
                 break;
+            case "duck-hunt":
+                gameType = "الصياد";
+                break;
             case "story-time":
                 gameType = "قصة قصيرة";
                 break;
@@ -67,35 +73,47 @@
         </h4>
         {#if userLevel.completed && userLevel.accuracy}
             <div class="flex flex-col items-start">
-                <h6 class="text-sm">{userLevel.wpm?.toFixed(0)} wpm</h6>
-                <h6 class="text-sm">{userLevel.accuracy.toFixed(0)} %</h6>
-                <h6 class="text-sm">{userLevel.time?.toFixed(0)} s</h6>
+                <h6 class="text-sm font-bold">
+                    {userLevel.wpm?.toFixed(0)}
+                    <span class="text-xs font-light"
+                        >{lang === "en" ? "wpm" : "ك.ك.د"}</span
+                    >
+                </h6>
+                <h6 class="text-sm font-bold">
+                    {userLevel.accuracy.toFixed(0)}
+                    <span class="text-xs font-light">%</span>
+                </h6>
+                <h6 class="text-sm font-bold">
+                    {userLevel.time?.toFixed(0)}
+                    <span class="text-xs font-light"
+                        >{lang === "en" ? "s" : "ث"}</span
+                    >
+                </h6>
             </div>
         {:else if userLevel.completed && !userLevel.accuracy}
             <div class="text-4xl">
-                <Icon class="icon" icon="ic:baseline-gpp-good" />
+                <Icon class="icon" icon={baselineGppGood} />
             </div>
         {/if}
     </div>
     <div
         class:completed={userLevel.completed || currentLevel}
         class="finger rounded-full bg-rose-600 flex flex-col justify-center"
-        data-dir={lang}
     >
         {#if userLevel.level.type === "samurai-game"}
             <div
                 class="w-full h-full flex justify-center items-center text-7xl text-gostwhite"
             >
-                <Icon icon="game-icons:samurai-helmet" />
+                <Icon icon={samuraiHelmet} />
             </div>
         {:else if userLevel.level.type === "duck-hunt"}
             <div
                 class="w-full h-full flex justify-center items-center text-6xl text-gostwhite"
             >
-                <Icon icon="icon-park-solid:duck" />
+                <Icon icon={duckIcon} />
             </div>
         {:else}
-            <div class="nail" data-dir={lang} />
+            <div class="nail" />
             <div class="h-full flex items-center justify-center">
                 <h2 class="text-2xl text-white w-full text-center">
                     {userLevel.level.name}
@@ -132,7 +150,7 @@
     .level.completed::before {
         opacity: 1;
     }
-    :global(.layout[data-dir="ar"] .level::before) {
+    :global(body[data-lang="ar"] .level::before) {
         translate: 0.8rem -0.8rem;
     }
     :global(.finger) {
@@ -143,7 +161,7 @@
         right: 4px;
         transition: all 0.5s ease;
     }
-    :global(.finger[data-dir="ar"]) {
+    :global(body[data-lang="ar"] .finger) {
         right: auto;
         left: 4px;
     }
@@ -165,7 +183,7 @@
         margin-top: 2rem;
         z-index: 3;
     }
-    :global(.nail[data-dir="ar"]) {
+    :global(body[data-lang="ar"] .nail) {
         left: auto;
         right: 0;
     }

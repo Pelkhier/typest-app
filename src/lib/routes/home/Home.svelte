@@ -8,23 +8,22 @@
     import { invoke } from "@tauri-apps/api/tauri";
 
     let userStats: UserStats = null;
+    const lang: Lang = $langStore;
 
     onMount(async () => {
         userStats = await invoke("get_user_stats", {
-            lang: $langStore,
+            lang: lang,
         });
     });
-
-    const lang: Lang = "en";
 </script>
 
-<svelte:head>
+<!-- <svelte:head>
     <title>Typest | Type Fast + Type Fun</title>
     <meta
         name="description"
         content="If you want to type fast and accurate, a place where you learn and practice fast typing in both languages, Arabic and English, this is you place."
     />
-</svelte:head>
+</svelte:head> -->
 
 {#if userStats}
     <div
@@ -116,7 +115,7 @@
             rgba(248, 248, 255, 1) 100%
         );
     }
-    /* :global(html .layout[data-dir="ar"] .home .hero) {
+    :global(html body[data-lang="ar"] .home .hero) {
         border-radius: 0 1.5rem 1.5rem 1.5rem;
         background: rgb(122, 122, 122);
         background: linear-gradient(
@@ -125,8 +124,8 @@
             rgba(29, 33, 43, 1) 84%,
             rgba(29, 33, 43, 1) 100%
         );
-    } */
-    :global(html.dark .layout[data-dir="ar"] .home .hero) {
+    }
+    :global(html.dark body[data-lang="ar"] .home .hero) {
         background: rgb(179, 179, 179);
         background: linear-gradient(
             351deg,

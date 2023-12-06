@@ -9,7 +9,7 @@ pub async fn get_level_info(
     state: State<'_, Pool<Sqlite>>,
     order_position: i32,
     lang: String,
-) -> Result<Value, String> {
+) -> Result<Option<Value>, String> {
     let db = state.inner();
 
     #[derive(sqlx::FromRow)]
@@ -39,26 +39,29 @@ pub async fn get_level_info(
         .bind(order_position)
         .bind(lang)
         .fetch_one(db)
-        .await
-        .unwrap();
-
-    let response = json!({
-        "userId": result.user_id,
-        "levelId": result.level_id,
-        "accuracy": result.accuracy,
-        "wpm": result.wpm,
-        "completed": result.completed,
-        "time": result.time,
-        "level": {
-            "lang": result.lang,
-            "name": result.name,
-            "order": result.order_position,
-            "type": result.r#type,
-            "words": result.words,
-            "expectedMiniGameScore": result.expected_mini_game_score,
+        .await;
+    match result {
+        Err(_) => return Ok(None),
+        Ok(result) => {
+            let response = json!({
+            "userId": result.user_id,
+            "levelId": result.level_id,
+            "accuracy": result.accuracy,
+            "wpm": result.wpm,
+            "completed": result.completed,
+            "time": result.time,
+            "level": {
+                "lang": result.lang,
+                "name": result.name,
+                "order": result.order_position,
+                "type": result.r#type,
+                "words": result.words,
+                "expectedMiniGameScore": result.expected_mini_game_score,
+            }
+            });
+            return Ok(Some(response));
         }
-    });
-    Ok(response)
+    }
 }
 
 #[command]
