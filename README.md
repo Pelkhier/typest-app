@@ -1,4 +1,6 @@
-# Typest
+# Typest Desktop App
+
+-   [Download 0.0.0v](https://github.com/Pelkhier/typest-app/src-tauri/target/release/bundle/nsis/typest-app_0.0.0_x64-setup.exe)
 
 ## Table of Contents
 
